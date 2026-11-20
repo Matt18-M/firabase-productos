@@ -1,5 +1,6 @@
 import { db } from '../firabase';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+
 export interface Producto {
     id: string;
     nombre: string;
@@ -55,4 +56,9 @@ export const crearProducto = async (
             precio,
             stock
         });
+    }
+
+    export const eliminarProducto = async (id: string) => {
+        const productoRef = doc(db, "productos", id);
+        await deleteDoc(productoRef);
     }

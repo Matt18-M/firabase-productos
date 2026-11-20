@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { obtenerProductos, type Producto } from '../services/productoService';
+import { obtenerProductos, eliminarProducto,  type Producto } from '../services/productoService';
 
 interface Props {
     onEditar: (producto: Producto) => void;
@@ -24,6 +24,15 @@ export const ProductoList = ({ onEditar }: Props) => {
 
     }, []);
 
+    const handleEliminar = async (id: string) => {
+        try {
+            await eliminarProducto(id);
+            console.log("Producto eliminado correctamente");
+        } catch (error) {
+            console.error("Error al eliminar el producto: ", error);
+        }
+    };
+
     return (
         <div>
             <h2>Lista de Productos</h2>
@@ -35,6 +44,7 @@ export const ProductoList = ({ onEditar }: Props) => {
                         ${producto.precio.toFixed(2)}
                         (Stock: {producto.stock})
                         <button onClick={() => onEditar(producto)}>Editar</button>
+                        <button onClick={() => handleEliminar(producto.id)}>Eliminar</button>
                     </li>
                 ))}
             </ul>
