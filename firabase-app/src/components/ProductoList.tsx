@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { obtenerProductos, type Producto } from '../services/productoService';
 
-export const ProductoList = () => {
+interface Props {
+    onEditar: (producto: Producto) => void;
+}
+
+export const ProductoList = ({ onEditar }: Props) => {
 
     const [productos, setProductos] = useState<Producto[]>([]);
 
@@ -30,6 +34,7 @@ export const ProductoList = () => {
                         <strong>{producto.nombre}</strong> -
                         ${producto.precio.toFixed(2)}
                         (Stock: {producto.stock})
+                        <button onClick={() => onEditar(producto)}>Editar</button>
                     </li>
                 ))}
             </ul>

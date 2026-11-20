@@ -1,5 +1,5 @@
 import { db } from '../firabase';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 export interface Producto {
     id: string;
     nombre: string;
@@ -31,7 +31,6 @@ export const crearProducto = async (
 
     };
 
-
     export const obtenerProductos = async (): Promise<Producto[]> => {
         const querySnapshot = await getDocs(collection(db, "productos"));
         
@@ -41,4 +40,19 @@ export const crearProducto = async (
             })) as Producto[];
         
         return productos;
+    }
+
+    export const actualizarProducto = async(
+        id: string,
+        nombre: string,
+        precio: number,
+        stock: number
+    )=> {
+        const productoRef = doc(db, "productos", id);
+
+        await updateDoc(productoRef, {
+            nombre,
+            precio,
+            stock
+        });
     }
