@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { obtenerProductos, eliminarProducto,  type Producto } from '../services/productoService';
+import { escucharProductos, eliminarProducto, type Producto } from '../services/productoService';
 
 interface Props {
     onEditar: (producto: Producto) => void;
@@ -11,16 +11,13 @@ export const ProductoList = ({ onEditar }: Props) => {
 
     useEffect(() => {
 
-        const cargarProductos = async () => {
-            try {
-                const datos = await obtenerProductos();
-                setProductos(datos);
-            } catch (error) {
-                console.error("Error al obtener los productos: ", error);
-            }
-        };
+        const unsubscribe = escucharProductos((datos) => {
+            setProductos(datos);
+        });
 
-        cargarProductos();
+        return () => {
+            unsubscribe();
+        };
 
     }, []);
 

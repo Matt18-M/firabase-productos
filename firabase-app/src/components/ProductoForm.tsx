@@ -11,6 +11,7 @@ export const ProductoForm = ({ productoEditar }: Props) => {
     const [nombre, setNombre] = useState(productoEditar ? productoEditar.nombre ?? "" : "");
     const [precio, setPrecio] = useState(productoEditar ? productoEditar.precio.toString() : "");
     const [stock, setStock] = useState(productoEditar ? productoEditar.stock.toString() : "");
+    const [categoria, setCategoria] = useState(productoEditar ? productoEditar.categoria ?? "" : "");
 
     const guardarProducto = async (e: SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,14 +23,17 @@ export const ProductoForm = ({ productoEditar }: Props) => {
                     productoEditar.id,
                     nombre,
                     Number(precio),
-                    Number(stock)
+                    Number(stock),
+                    categoria
                 );
                 console.log("Producto actualizado");
             } else {
                 await crearProducto(
                     nombre,
                     Number(precio),
-                    Number(stock)
+                    Number(stock),
+                    categoria
+
                 );
 
                 console.log("Producto agregado correctamente");
@@ -83,6 +87,16 @@ export const ProductoForm = ({ productoEditar }: Props) => {
 
                 <br />
 
+                <label htmlFor="categoria">Categoria:</label>
+                <input
+                    type="text"
+                    id="categoria"
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                    required
+                />
+
+                <br />
                 <button type="submit">
                     {productoEditar ? "Actualizar Producto" : "Agregar Producto"}
                 </button>
