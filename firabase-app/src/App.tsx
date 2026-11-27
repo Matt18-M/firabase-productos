@@ -1,20 +1,43 @@
 import './App.css';
-import ProductoForm from './components/ProductoForm';
-import { ProductoList } from './components/ProductoList';
-import { useState } from 'react';
-import type { Producto } from './services/productoService';
+import { obtenerProductosDisponibles } from './services/productoService';
+import { consulta1, consulta2, consulta3, consulta4 } from './scripts/consultasVehiculos';
 
 function App() {
 
-  const [productosEditar, setProductosEditar] = useState<Producto | null>(null);
-
   return (
-    <div className="App">
-      <ProductoForm key={productosEditar?.id ?? 'nuevo'} productoEditar={productosEditar} />
-      <ProductoList onEditar={setProductosEditar} />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '250px' }}>
+      <button onClick={async () => {
+        const productosDeConsulta = await obtenerProductosDisponibles();
+        console.log("Productos obtenidos: ", productosDeConsulta);
+      }}>
+        Consultar productos
+      </button>
+
+      <button onClick={async () => {
+        await consulta1();
+      }}>
+        Consulta 1 - Vehículos disponibles
+      </button>
+
+      <button onClick={async () => {
+        await consulta2();
+      }}>
+        Consulta 2 - SUV disponibles
+      </button>
+
+      <button onClick={async () => {
+        await consulta3();
+      }}>
+        Consulta 3 - Vehículos por precio
+      </button>
+
+      <button onClick={async () => {
+        await consulta4();
+      }}>
+        Consulta 4 - Sedan desde 2023
+      </button>
     </div>
   );
-
 }
 
 export default App;

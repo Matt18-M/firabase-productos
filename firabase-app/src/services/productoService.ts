@@ -1,5 +1,5 @@
 import { db } from '../firabase';
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, onSnapshot, query, where, orderBy } from 'firebase/firestore';
 
 export interface Producto {
     id: string;
@@ -84,4 +84,22 @@ export const actualizarProducto = async (
 export const eliminarProducto = async (id: string) => {
     const productoRef = doc(db, "productos", id);
     await deleteDoc(productoRef);
+};
+
+export const obtenerProductosDisponibles = async (): Promise<Producto[]> => {
+    const consulta = query(
+        collection(db, "productos"), 
+        where("stock", ">", 0), 
+        where("precio", ">=", 100), 
+        where("precio", "<=", 500), 
+        orderBy("stock", "desc"));
+    
+    const querySnapshot = await getDocs(consulta);
+    
+    const productos = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data()
+    })) as Producto[];
+    
+    return productos;
 };
