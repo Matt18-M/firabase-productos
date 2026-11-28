@@ -1,5 +1,5 @@
-import { db } from '../firabase';
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, onSnapshot, query, where, orderBy } from 'firebase/firestore';
+import { db,  } from '../firabase';
+import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, onSnapshot, query, where, orderBy, limit, startAfter, QueryDocumentSnapshot, type DocumentData  } from 'firebase/firestore';
 
 export interface Producto {
     id: string;
@@ -92,6 +92,7 @@ export const obtenerProductosDisponibles = async (): Promise<Producto[]> => {
         where("stock", ">", 0), 
         where("precio", ">=", 100), 
         where("precio", "<=", 500), 
+        limit(5),
         orderBy("stock", "desc"));
     
     const querySnapshot = await getDocs(consulta);
@@ -102,4 +103,40 @@ export const obtenerProductosDisponibles = async (): Promise<Producto[]> => {
     })) as Producto[];
     
     return productos;
+};
+
+export const obtenerProductosPaginados = async (
+    ultimoDocumento?: QueryDocumentSnapshot<DocumentData>
+) => {
+
+    let consulta;
+
+    if (ultimoDocumento) {
+        consulta = query(
+            collection(db, "productos"),
+            orderBy("precio", "asc"),
+            startAfter(ultimoDocumento),
+            limit(5)
+        );
+    } else {
+        consulta = query(
+            collection(db, "productos"),
+            orderBy("precio", "asc"),
+            limit(5)
+        );
+    }
+
+    const snapshot = await getDocs(consulta);
+
+    const productos = snapshot.docs.map((documentos) => ({
+        id: documentos.id,
+        ...documentos.data()
+    })) as Producto[];
+
+    const nuevoUltimoDoc = snapshot.docs[snapshot.docs.length - 1];
+
+    return {
+        productos,
+        ultimoDocumento: nuevoUltimoDoc
+    };
 };

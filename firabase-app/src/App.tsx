@@ -1,41 +1,23 @@
 import './App.css';
-import { obtenerProductosDisponibles } from './services/productoService';
-import { consulta1, consulta2, consulta3, consulta4 } from './scripts/consultasVehiculos';
+import { VehiculoListaPaginada } from './components/VehiculoListaPaginada';
 
 function App() {
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '250px' }}>
-      <button onClick={async () => {
-        const productosDeConsulta = await obtenerProductosDisponibles();
-        console.log("Productos obtenidos: ", productosDeConsulta);
-      }}>
-        Consultar productos
-      </button>
+    <div className="app-container">
 
-      <button onClick={async () => {
-        await consulta1();
-      }}>
-        Consulta 1 - Vehículos disponibles
-      </button>
+      <header className="app-header">
+        <h1>Sistema de Vehículos</h1>
+      </header>
 
-      <button onClick={async () => {
-        await consulta2();
-      }}>
-        Consulta 2 - SUV disponibles
-      </button>
+      <main className="app-card">
+        <VehiculoListaPaginada />
+      </main>
 
-      <button onClick={async () => {
-        await consulta3();
-      }}>
-        Consulta 3 - Vehículos por precio
-      </button>
+      <footer className="app-footer">
+        <p>Proyecto académico | React + TypeScript + Firebase</p>
+      </footer>
 
-      <button onClick={async () => {
-        await consulta4();
-      }}>
-        Consulta 4 - Sedan desde 2023
-      </button>
     </div>
   );
 }

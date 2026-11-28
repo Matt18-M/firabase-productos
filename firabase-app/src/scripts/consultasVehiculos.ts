@@ -23,8 +23,6 @@ export const consulta1 = async () => {
     }
 };
 
-consulta1();
-
 
 export const consulta2 = async () => {
     try {
